@@ -11,6 +11,8 @@ const currUser = ref({ userId: '', userName: '' })
 
 const openTab = ref('Users');
 
+const mobileMenuOpen = ref(window.location.pathname === '/');
+
 
 onMounted(() => {
     if (isLoggedIn) {
@@ -147,7 +149,7 @@ function toggleSidebar(value) {
             <LoginRegister></LoginRegister>
         </div>
         
-        <div v-else class="flex flex-col justify-between lg:w-1/5">
+        <div v-else class="lg:flex flex-col justify-between lg:w-1/5 w-screen" :class="!mobileMenuOpen ? 'hidden' : 'flex'">
             <div class="flex justify-center my-1">
                 <Button @click="toggleSidebar('Users')"
                     class="flex-1 mx-1 border border-black text-current font-semibold bg-white hover:bg-teal-300">Users</Button>
@@ -166,7 +168,7 @@ function toggleSidebar(value) {
             </div>
             <SidebarFooter :currUser="currUser"></SidebarFooter>
         </div>
-        <div v-if="isLoggedIn" class="flex-1 border border-black rounded-md mr-1 my-1">
+        <div v-if="isLoggedIn" class="lg:block flex-1 border border-black rounded-md mr-1 my-1" :class="mobileMenuOpen ? 'hidden' : 'block'">
 
         </div>
     </div>

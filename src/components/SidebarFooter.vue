@@ -27,7 +27,7 @@ import { DropdownMenu,
           <DropdownMenuTrigger as-child>
             <GearIcon class="h-6 w-6 hover:scale-105 cursor-pointer"></GearIcon>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent side="right" class="border border-black my-1">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
