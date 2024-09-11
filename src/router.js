@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from './views/Home.vue'
+import NewChat from './views/NewChat.vue'
 import Chat from './views/Chat.vue'
-
 const routes = [
   {
     path: '/',
@@ -9,15 +9,15 @@ const routes = [
     component: Home
   },
   {
-    path: '/chat/:id',
+    path: '/chat/:chatId',
     name: 'Chat',
     component: Chat,
     props: true
   },
   {
     path: '/new/chat/:userid-:username',
-    name: 'Chat',
-    component: Chat,
+    name: 'NewChat',
+    component: NewChat,
     props: route => ({
       userId: route.params.userid,
       username: decodeURIComponent(route.params.username.replace(/\+/g, ' '))

@@ -5,26 +5,28 @@ import { ArrowLeftIcon,  ImageIcon, PaperPlaneIcon } from '@radix-icons/vue';
 import axios from 'axios';
 import { ref, defineProps, onMounted } from 'vue';
 
-onMounted(async () => {
-    // get chat data/messagelist from db
-})
 
 const props = defineProps({
-  chatId: {
+  userId: {
     type: String,
     required: true,
     validator: (value) => value.length > 0
+  },
+  username: {
+    type: String,
+    required: true,
+    default: 'Utente Sconosciuto'
   }
 });
 
-async function submitNewMessage() {
+async function submitNewChat() {
   if (message !== ''){
   try {
-    const response = axios.post(`/new/message/${chatId}`, { message: message } , {
+    const response = axios.post(`/new/chat/${userId}`, { message: message } , {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         });
-        // TODO
-       
+        const chatId = response.data.newMessage.chatId;
+        this.$router.push(`/chat/${chatId}`);
   } catch (error) {
     console.error('Error creating chat', error)
   }
@@ -53,7 +55,7 @@ const message = ref('');
 
   </div>
   <div class="border-t border-black h-16">
-    <form @submit.prevent="submitNewMessage()" class="flex items-center justify-center gap-1 h-full px-1 py-1">
+    <form @submit.prevent="submitNewChat()" class="flex items-center justify-center gap-1 h-full px-1 py-1">
       <div class="h-4/5 rounded-md border border-black aspect-square flex justify-center items-center">
         <ImageIcon class="scale-150"></ImageIcon>
       </div>
