@@ -17,7 +17,7 @@ import { DropdownMenu,
 </script>
 
 <template>
-    <div class="flex mx-1 gap-4 py-4 my-1 rounded-md items-center justify-evenly border border-black ">
+    <div class="flex mx-1 gap-4 h-14 my-1 rounded-md items-center justify-evenly border border-black ">
         <Avatar class="border border-black">
           <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue"></AvatarImage>
           <AvatarFallback>{{ currUser.userName.substring(0,1) }}</AvatarFallback>
