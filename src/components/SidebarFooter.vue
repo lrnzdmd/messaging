@@ -19,7 +19,7 @@ import { DropdownMenu,
 <template>
     <div class="flex mx-1 gap-4 h-14 my-1 rounded-md items-center justify-evenly border border-black ">
         <Avatar class="border border-black">
-          <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue"></AvatarImage>
+          <AvatarImage src="" alt="@radix-vue"></AvatarImage>
           <AvatarFallback>{{ currUser.userName.substring(0,1) }}</AvatarFallback>
         </Avatar>
         <p class="text-2xl font-semibold">{{ currUser.userName }}</p>
@@ -31,7 +31,7 @@ import { DropdownMenu,
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <span>Profile</span>
+              <RouterLink :to="'/profile'">Profile</RouterLink>
             </DropdownMenuItem>
             <DropdownMenuItem  @click="logout()" class="cursor-pointer">
               <span class="font-semibold text-red-600">Logout</span>

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from './views/Home.vue'
 import NewChat from './views/NewChat.vue'
 import Chat from './views/Chat.vue'
+import Profile from './views/Profile.vue'
 const routes = [
   {
     path: '/',
@@ -30,6 +31,11 @@ const routes = [
     name: 'NewGroupChat',
     component: Chat,
     props: true
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
   }
 ]
 
