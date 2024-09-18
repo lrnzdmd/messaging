@@ -6,7 +6,15 @@ import axios from 'axios';
 import { ref, defineProps, onMounted } from 'vue';
 
 onMounted(async () => {
-    // get chat data/messagelist from db
+  if (isLoggedIn) {
+        const profile = JSON.parse(localStorage.getItem('profile'));
+        currUser.value.userId = profile.id;
+        currUser.value.userName = profile.profile.fullName
+  }
+  const response = await axios.get(`https://messagingapi-5u1z.onrender.com/chat/${props.chatId}`,  { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`} });
+      if (response.data.chat) {
+      chat.value = response.data.chat;
+      }
 })
 
 const props = defineProps({
@@ -20,7 +28,7 @@ const props = defineProps({
 async function submitNewMessage() {
   if (message !== ''){
   try {
-    const response = axios.post(`/new/message/${chatId}`, { message: message } , {
+    const response = axios.post(`https://messagingapi-5u1z.onrender.com/new/message/${chatId}`, { message: message } , {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         });
         // TODO
@@ -30,7 +38,8 @@ async function submitNewMessage() {
   }
 }
 }
-
+const currUser = ref({ userId: '', userName: '' })
+const chat = ref('');
 const message = ref('');
 </script>
 
@@ -50,7 +59,11 @@ const message = ref('');
     </div>
   </div>
   <div class="h-full">
-
+    <div v-for="message in chat.messages" :key="message.id">
+      <div :class="message.senderId === currUser.userId ? 'self-end' : 'self-start'">
+        <p class="rounded-md border border-black p-2">{{ message.text }}</p>
+      </div>
+    </div>
   </div>
   <div class="border-t border-black h-16">
     <form @submit.prevent="submitNewMessage()" class="flex items-center justify-center gap-1 h-full px-1 py-1">
