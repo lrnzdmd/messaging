@@ -4,13 +4,11 @@ import { Input } from '@/components/ui/input'
 import { ArrowLeftIcon,  ImageIcon, PaperPlaneIcon } from '@radix-icons/vue';
 import axios from 'axios';
 import { ref, defineProps, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-onMounted(async () => {
-      const response = await axios.get(`https://messagingapi-5u1z.onrender.com/chat/${chatId}`,  { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`} });
-      if (response.data.chat) {
-      chat.value = response.data.chat;
-      }
-})
+const router = useRouter();
+
+
 
 const props = defineProps({
   userId: {
@@ -28,11 +26,11 @@ const props = defineProps({
 async function submitNewChat() {
   if (message !== ''){
   try {
-    const response = axios.post(`https://messagingapi-5u1z.onrender.com/new/chat/${userId}`, { message: message } , {
+    const response = await axios.post(`https://messagingapi-5u1z.onrender.com/new/chat/${props.userId}`, { message: message.value } , {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         });
         const chatId = response.data.newMessage.chatId;
-        this.$router.push(`/chat/${chatId}`);
+        router.push(`/chat/${chatId}`);
   } catch (error) {
     console.error('Error creating chat', error)
   }

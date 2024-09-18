@@ -9,10 +9,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/chat/:chatId',
+    path: '/chat/:chatid',
     name: 'Chat',
     component: Chat,
-    props: true
+    props: route => ({
+      chatId: route.params.chatid,
+    })
   },
   {
     path: '/new/chat/:userid-:username',

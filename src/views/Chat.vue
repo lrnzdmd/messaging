@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input'
 import { ArrowLeftIcon,  ImageIcon, PaperPlaneIcon } from '@radix-icons/vue';
 import axios from 'axios';
 import { ref, defineProps, onMounted } from 'vue';
+import { isLoggedIn, login, logout } from '../utils/useAuth';
+
 
 onMounted(async () => {
   if (isLoggedIn) {
@@ -15,6 +17,15 @@ onMounted(async () => {
       if (response.data.chat) {
       chat.value = response.data.chat;
       }
+      console.log(chat.value)
+      console.log('Current User ID:', currUser.value.userId);
+
+const partecip = chat.value.participants.find(user => user.userId !== currUser.value.userId);
+
+if (partecip) {
+  receiverName.value = partecip.user.profile.fullName;
+}
+    
 })
 
 const props = defineProps({
@@ -28,7 +39,7 @@ const props = defineProps({
 async function submitNewMessage() {
   if (message !== ''){
   try {
-    const response = axios.post(`https://messagingapi-5u1z.onrender.com/new/message/${chatId}`, { message: message } , {
+    const response = axios.post(`https://messagingapi-5u1z.onrender.com/new/message/${props.chatId}`, { message: message } , {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         });
         // TODO
@@ -41,6 +52,7 @@ async function submitNewMessage() {
 const currUser = ref({ userId: '', userName: '' })
 const chat = ref('');
 const message = ref('');
+const receiverName = ref('');
 </script>
 
 <template>
@@ -53,15 +65,16 @@ const message = ref('');
 
       <Avatar class="border border-black">
         <AvatarImage src="" alt="@radix-vue"></AvatarImage>
-        <AvatarFallback>M</AvatarFallback>
+        <AvatarFallback>{{ receiverName.substring(0,1) }}</AvatarFallback>
       </Avatar>
-      <h1 class="font-semibold text-xl">{{props.username}}</h1>
+      <h1 class="font-semibold text-xl">{{receiverName}}</h1>
     </div>
   </div>
   <div class="h-full">
-    <div v-for="message in chat.messages" :key="message.id">
-      <div :class="message.senderId === currUser.userId ? 'self-end' : 'self-start'">
-        <p class="rounded-md border border-black p-2">{{ message.text }}</p>
+    <div v-for="message in chat.messages" :key="message.id" class="flex flex-col">
+      <div :class="message.senderId === currUser.userId ? 'self-end' : 'self-start'" class="mx-2 my-1">
+        <p class="rounded-md border border-black p-2"> {{ message.text }}</p>
+        <p class="text-sm">{{ message.sentAt.substring(11,16) }}</p>
       </div>
     </div>
   </div>

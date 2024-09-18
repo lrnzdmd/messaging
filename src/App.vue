@@ -18,14 +18,15 @@ const mobileMenuOpen = computed(() => {
   return route.path === '/';
 });
 
-async function refresChatList() {
+async function refreshChatList() {
     const response = await axios.get(`https://messagingapi-5u1z.onrender.com/chatlist`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         });
         chats.value = response.data.chats 
+        
 }
 
-async function refresUserList() {
+async function refreshUserList() {
     const response = await axios.get(`https://messagingapi-5u1z.onrender.com/userlist`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         });
@@ -38,8 +39,14 @@ onMounted(async () => {
         currUser.value.userId = profile.id;
         currUser.value.userName = profile.profile.fullName
 
-        await refresUserList();
-        await refresChatList();
+        try {
+            await refreshUserList();
+            await refreshChatList();
+            console.log(chats.value)
+            console.log(users.value)
+        } catch (error) {
+            console.error('Error refreshing lists:', error);
+        }
     }
 })
 
@@ -132,7 +139,9 @@ function toggleSidebar(value) {
                     </RouterLink>
                 </div>
                 <div v-else v-for="chat in chats" :key="chat.id" class="hover:bg-teal-300 cursor-pointer">
-                    <ChatsList :chat></ChatsList>
+                    <RouterLink :to="`/chat/${chat.id}`">
+                    <ChatsList :chat="chat"></ChatsList>
+                    </RouterLink>
                 </div>
                 
             </div>

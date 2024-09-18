@@ -19,5 +19,6 @@ const props = defineProps({
       {{ user.profile.isOnline ? 'Online' : 'Offline' }}
     </Badge>
   </div>
+  <div class="min-w-full border-black border-t"></div>
   
 </template>
