@@ -5,6 +5,12 @@ import { ArrowLeftIcon,  ImageIcon, PaperPlaneIcon } from '@radix-icons/vue';
 import axios from 'axios';
 import { ref, defineProps, onMounted } from 'vue';
 
+onMounted(async () => {
+      const response = await axios.get(`https://messagingapi-5u1z.onrender.com/chat/${chatId}`,  { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`} });
+      if (response.data.chat) {
+      chat.value = response.data.chat;
+      }
+})
 
 const props = defineProps({
   userId: {
@@ -22,7 +28,7 @@ const props = defineProps({
 async function submitNewChat() {
   if (message !== ''){
   try {
-    const response = axios.post(`/new/chat/${userId}`, { message: message } , {
+    const response = axios.post(`https://messagingapi-5u1z.onrender.com/new/chat/${userId}`, { message: message } , {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         });
         const chatId = response.data.newMessage.chatId;
