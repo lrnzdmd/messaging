@@ -50,7 +50,7 @@ const message = ref('');
 
       <Avatar class="border border-black">
         <AvatarImage src="" alt="@radix-vue"></AvatarImage>
-        <AvatarFallback>M</AvatarFallback>
+        <AvatarFallback>{{ props.username.substring(0,1) }}</AvatarFallback>
       </Avatar>
       <h1 class="font-semibold text-xl">{{props.username}}</h1>
     </div>

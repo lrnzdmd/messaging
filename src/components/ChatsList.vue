@@ -1,10 +1,21 @@
 <script setup>
+import { ref } from 'vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
 const props = defineProps({
   chat: Object,
 });
+
+const currUser = localStorage.getItem('profile');
+const username = ref('')
+
+props.chat.participants.forEach(element => {
+  if (element.userId !== parseInt(currUser.id)) {
+    username.value = element.user.profile.fullName
+  }
+  console.log('userid: ',element)
+})
 
 </script>
 
@@ -13,9 +24,9 @@ const props = defineProps({
     <Avatar class="bg-indigo-300 border-black border">
         <AvatarImage src="" alt="@radix-vue"></AvatarImage>
         <AvatarFallback>{{ chat.name ? chat.name.substring(0, 1) :
-            chat.participants[1].user.profile.fullName.substring(0,1) }}</AvatarFallback>
+            username.substring(0,1) }}</AvatarFallback>
     </Avatar>
-    <p class="font-semibold"> {{ chat.name ? chat.name : chat.participants[1].user.profile.fullName }} </p>
+    <p class="font-semibold"> {{ chat.name ? chat.name : username }} </p>
     <Badge>{{ chat.type }}</Badge>
 
 </div>

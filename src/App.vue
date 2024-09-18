@@ -1,7 +1,7 @@
 <script setup>
 import { Button } from '@/components/ui/button';
 import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { isLoggedIn, login, logout } from './utils/useAuth';
 import UsersList from './components/UsersList.vue';
 import ChatsList from './components/ChatsList.vue';
@@ -11,6 +11,7 @@ import axios from 'axios';
 
 const currUser = ref({ userId: '', userName: '' })
 const route = useRoute();
+const router = useRouter();
 
 const openTab = ref('Users');
 
@@ -42,8 +43,6 @@ onMounted(async () => {
         try {
             await refreshUserList();
             await refreshChatList();
-            console.log(chats.value)
-            console.log(users.value)
         } catch (error) {
             console.error('Error refreshing lists:', error);
         }
@@ -54,43 +53,18 @@ const users = ref([]);
 
 const chats = ref([]);
 
-const messages = [
-    {
-        id: 1,
-        author: "Mario Rossi",
-        text: "Ciao, come stai?",
-        sentAt: new Date("2023-01-15T09:30:00"),
-        sentToChat: 101
-    },
-    {
-        id: 2,
-        author: "Luigi Bianchi",
-        text: "Sto bene, grazie! E tu?",
-        sentAt: new Date("2023-01-15T09:35:00"),
-        sentToChat: 101
-    },
-    {
-        id: 3,
-        author: "Anna Verdi",
-        text: "Buongiorno a tutti!",
-        sentAt: new Date("2023-02-20T11:45:00"),
-        sentToChat: 102
-    },
-    {
-        id: 4,
-        author: "Carlo Neri",
-        text: "Qualcuno ha visto il mio libro?",
-        sentAt: new Date("2023-03-01T14:20:00"),
-        sentToChat: 103
-    },
-    {
-        id: 5,
-        author: "Maria Gialli",
-        text: "Sì, l'ho visto sulla scrivania.",
-        sentAt: new Date("2023-03-01T14:22:00"),
-        sentToChat: 103
+
+function newChatRoute(userId,username){
+    const prova = chats.value.find(chat => chat.participants.some(part => part.userId === userId));
+    if (prova) {
+       router.push({ name: 'Chat', params: { chatid: prova.id } }); 
     }
-];
+    else {
+        router.push({ name: 'NewChat', params: { userid: userId, username: username}})
+    }
+
+    
+}
 
 
 
@@ -134,9 +108,9 @@ function toggleSidebar(value) {
                 
                 <div v-else-if="openTab === 'Users'" v-for="user in users" :key="user.id"
                     class="hover:bg-teal-300 cursor-pointer">
-                    <RouterLink :to="`/new/chat/${user.id}-${encodeURIComponent(user.profile.fullName.replace(/ /g, '+'))}`">
+                    <div @click="newChatRoute(user.id, encodeURIComponent(user.profile.fullName))">
                         <UsersList :user="user"></UsersList>
-                    </RouterLink>
+                    </div>
                 </div>
                 <div v-else v-for="chat in chats" :key="chat.id" class="hover:bg-teal-300 cursor-pointer">
                     <RouterLink :to="`/chat/${chat.id}`">
