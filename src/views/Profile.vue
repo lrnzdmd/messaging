@@ -3,19 +3,27 @@ import { ArrowLeftIcon } from '@radix-icons/vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ref } from 'vue';
+import { ref} from 'vue';
+import { useRouter } from 'vue-router';
+import { logout } from '@/utils/useAuth';
 import axios from 'axios';
-const profile = JSON.parse(localStorage.getItem('profile'));
+
+const router = useRouter();
+let profile = JSON.parse(localStorage.getItem('profile'));
 
 async function editProfile() {
     const payload = { fullName: '', aboutMe: '' };
     fullName.value === '' ? payload.fullName = profile.profile.fullName : payload.fullName = fullName.value;
     aboutMe.value === '' ? payload.aboutMe = profile.profile.aboutMe : payload.aboutMe = aboutMe.value;
     try {
-        const response = await axios.post('https://messagingapi-5u1z.onrender.com/editprofile', payload ,{
+        const response = await axios.patch('https://messagingapi-5u1z.onrender.com/updateprofile', payload ,{
             headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}`},
         })
-        // todo route sul server e prendere il nuovo profile token dalla route e sbatterlo in localstorage.
+        if (response) {
+            logout();
+        }
+
+         
     } catch (error) {
         console.error('error editing profile: ', error);
     }
@@ -46,6 +54,7 @@ const aboutMe = ref('');
         <Label for="aboutMe">About Me</Label>
         <Input id="aboutMe" :placeholder="profile.profile.aboutMe" v-model="aboutMe"></Input>
      </div>
-     <Button>Edit Profile</Button>
+     <Button class="bg-teal-500 hover:bg-teal-300 transition duration-300 ease-in-out">Edit Profile</Button>
+     <p>Editing profile will log you out, log back in to access your edited profile.</p>
     </form>
 </template>

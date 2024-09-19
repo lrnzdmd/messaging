@@ -7,15 +7,16 @@ const props = defineProps({
   chat: Object,
 });
 
-const currUser = localStorage.getItem('profile');
+const currUser = JSON.parse(localStorage.getItem('profile'));
 const username = ref('')
 
-props.chat.participants.forEach(element => {
-  if (element.userId !== parseInt(currUser.id)) {
-    username.value = element.user.profile.fullName
-  }
-  console.log('userid: ',element)
-})
+console.log(props.chat.participants)
+props.chat.participants.forEach(user => {
+  if (user.userId !== parseInt(currUser.id)) {
+    username.value = user.user.profile.fullName;
+  } 
+});
+
 
 </script>
 
